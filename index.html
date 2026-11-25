@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Does Geometry Matter? Comparing Fingerprint, Graph, and 3D Pretraining for Molecular Property Prediction. AI4Mat-NeurIPS 2026 workshop.">
+  <meta property="og:title" content="Does Geometry Matter? Comparing Fingerprint, Graph, and 3D Pretraining for Molecular Property Prediction" />
+  <meta property="og:description" content="AI4Mat-NeurIPS 2026 workshop paper. A 30-million-molecule dataset of π-conjugated molecules with GFN2-xTB-optimized geometries, and a comparison of fingerprint, graph and 3D encoders on OCELOT." />
+  <meta property="og:url" content="https://baskargroup.github.io/pi-atlas/" />
+  <meta property="og:image" content="https://baskargroup.github.io/pi-atlas/static/images/workflow.png" />
+  <meta name="keywords" content="π-conjugated molecules, organic semiconductors, GFN2-xTB, OCELOT, molecular pretraining, EquiformerV2, GraphGPS">
+
+  <title>Does Geometry Matter? · π-Atlas</title>
+  <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <style>
+    .button[disabled] { opacity: 0.55; }
+    .venue { color: #0064E0; font-weight: bold; }
+    #results-table { font-size: 0.85rem; }
+    #results-table th, #results-table td { text-align: center; white-space: nowrap; }
+    #results-table td:first-child, #results-table th:first-child { text-align: left; }
+    #results-table tr.group-break td { padding: 0; border-bottom: 2px solid #dbdbdb; }
+  </style>
+</head>
+
+<body>
+<!-- ===== Hero / Header ===== -->
+<section class="hero">
+ <div class="hero-body">
+  <div class="container is-max-desktop">
+   <div class="columns is-centered">
+    <div class="column has-text-centered">
+      <h1 class="title is-1 publication-title">Does Geometry Matter? Comparing Fingerprint, Graph, and 3D Pretraining for Molecular Property Prediction</h1>
+
+      <div class="is-size-5 publication-authors">
+        <span class="author-block">Hossein Zaremehrjerdi<sup>1</sup>,</span>
+        <span class="author-block">Zachary T. Gardner<sup>2</sup>,</span>
+        <span class="author-block">Rebekah Duke<sup>2</sup>,</span>
+        <span class="author-block">Marjan Saadati<sup>1</sup>,</span>
+        <span class="author-block">Suresh Muknahallipatna<sup>3</sup>,</span>
+        <span class="author-block">Chad Risko<sup>2</sup>,</span>
+        <span class="author-block">Baskar Ganapathysubramanian<sup>1</sup></span>
+      </div>
+
+      <div class="is-size-5 publication-authors" style="margin-top:1em;">
+        <span class="author-block">1 Iowa State University&nbsp;&nbsp; 2 University of Kentucky&nbsp;&nbsp; 3 University of Wyoming</span>
+      </div>
+
+      <p class="is-size-5 venue" style="margin-top:1em;">
+        Accepted at the AI4Mat-NeurIPS 2026 Workshop: AI for Accelerated Materials Discovery, Sydney, Australia
+      </p>
+
+      <div class="publication-links" style="margin-top:1.5em;">
+        <span class="link-block">
+          <a class="button is-normal is-rounded is-dark" disabled title="Coming soon">
+            <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper (coming soon)</span>
+          </a>
+        </span>
+        <span class="link-block">
+          <a class="button is-normal is-rounded is-dark" disabled title="Coming soon">
+            <span class="icon"><i class="fab fa-github"></i></span><span>Code (coming soon)</span>
+          </a>
+        </span>
+        <span class="link-block">
+          <a class="button is-normal is-rounded is-dark" disabled title="Coming soon">
+            <span class="icon"><i class="fas fa-database"></i></span><span>Dataset (coming soon)</span>
+          </a>
+        </span>
+      </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ===== Teaser / Figure 1 ===== -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <figure style="margin:0;">
+        <img src="static/images/workflow.png" alt="Workflow from dataset construction to property prediction" style="width:100%; height:auto;">
+        <figcaption class="subtitle has-text-centered" style="margin-top:1em;">
+          <strong>Workflow from dataset construction to property prediction.</strong> Conjugated candidates are converted
+          to 3D conformers, relaxed with MMFF94, and optimized with semiempirical GFN2-xTB, which also supplies the stored
+          electronic properties. These molecules pretrain encoders of increasing structural detail, each with the objective
+          standard for its representation, which are then adapted to OCELOT with a frozen backbone or end-to-end
+          fine-tuning for HOMO, LUMO, and gap prediction.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Abstract ===== -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            The discovery of molecular-based semiconducting materials requires identifying building blocks whose electronic
+            properties match a target application across a chemical space too large for exhaustive evaluation.
+            Density-functional theory (DFT) offers the accuracy needed to rank candidates but is far too expensive at
+            screening scale; semiempirical methods, such as GFN2-xTB, can supply optimized geometries and electronic
+            structure information at a small fraction of the cost. Here, we assemble a 30-million-molecule dataset of
+            combinatorially generated π-conjugated molecules, each with a GFN2-xTB-optimized geometry and computed
+            electronic properties, averaging 24.4 heavy atoms with roughly 90% between 15 and 35, to explore the chemical
+            space of π-conjugated molecules of potential interest for semiconductors. We then ask which molecular
+            representation maps this dataset into accuracy on OCELOT, a curated benchmark of π-conjugated molecules with
+            DFT targets for HOMO, LUMO, and the gap. Pretraining a fingerprint encoder yields little: even with the full
+            dataset and end-to-end fine-tuning, the encoder fails to beat a published descriptor baseline, and more
+            pretraining makes its frozen LUMO predictions worse. Pretraining 3D encoders on the same molecules by
+            coordinate denoising instead cuts error by up to 22% relative to random initialization, and our best 3D model
+            outperforms every fingerprint and graph configuration tested, lowering test MAE by 11%, 9%, and 7% on the
+            three properties relative to the strongest of them.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Table 1 ===== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Modality comparison on curated OCELOT DFT targets</h2>
+    <div class="table-container">
+      <table id="results-table" class="table is-hoverable is-fullwidth">
+        <thead>
+          <tr><th></th><th></th><th></th><th colspan="2">HOMO</th><th colspan="2">LUMO</th><th colspan="2">Gap</th></tr>
+          <tr><th>Model</th><th>Pretrain</th><th>Adapt</th><th>MAE</th><th>R²</th><th>MAE</th><th>R²</th><th>MAE</th><th>R²</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>MPNN + descriptors</td><td>N/A</td><td>N/A</td><td>0.330</td><td><u>0.61</u></td><td>0.289</td><td>0.76</td><td>0.548</td><td><u>0.50</u></td></tr>
+          <tr class="group-break"><td colspan="9"></td></tr>
+          <tr><td>Fingerprint MLP (1D)</td><td>none</td><td>frozen</td><td>0.3962</td><td>0.3152</td><td>0.3845</td><td>0.4793</td><td>0.6427</td><td>0.2367</td></tr>
+          <tr><td>Fingerprint MLP (1D)</td><td>0.3M</td><td>frozen</td><td>0.3840</td><td>0.3625</td><td>0.3782</td><td>0.4910</td><td>0.6383</td><td>0.2648</td></tr>
+          <tr><td>Fingerprint MLP (1D)</td><td>30M</td><td>frozen</td><td>0.3684</td><td>0.3991</td><td>0.3908</td><td>0.4510</td><td>0.6161</td><td>0.2907</td></tr>
+          <tr><td>Fingerprint MLP (1D)</td><td>0.3M</td><td>full</td><td>0.3344</td><td>0.4483</td><td>0.3013</td><td>0.6548</td><td>0.5778</td><td>0.3494</td></tr>
+          <tr><td>Fingerprint MLP (1D)</td><td>30M</td><td>full</td><td>0.3323</td><td>0.4740</td><td>0.2955</td><td>0.6662</td><td>0.5567</td><td>0.3634</td></tr>
+          <tr class="group-break"><td colspan="9"></td></tr>
+          <tr><td>GraphGPS (2D)</td><td>none</td><td>frozen</td><td>0.3445</td><td>0.4701</td><td>0.3150</td><td>0.6256</td><td>0.5782</td><td>0.3707</td></tr>
+          <tr><td>GraphGPS (2D)</td><td>0.3M</td><td>frozen</td><td>0.3256</td><td>0.5149</td><td>0.2978</td><td>0.6798</td><td>0.5653</td><td>0.3939</td></tr>
+          <tr><td>GraphGPS (2D)</td><td>30M</td><td>frozen</td><td>0.3115</td><td>0.5303</td><td>0.2674</td><td>0.7367</td><td>0.5282</td><td>0.4610</td></tr>
+          <tr><td>GraphGPS (2D)</td><td>0.3M</td><td>full</td><td>0.3102</td><td>0.5332</td><td>0.2547</td><td>0.7485</td><td>0.5792</td><td>0.3543</td></tr>
+          <tr><td>GraphGPS (2D)</td><td>30M</td><td>full</td><td>0.3036</td><td>0.5580</td><td><u>0.2460</u></td><td>0.7681</td><td>0.5042</td><td>0.4861</td></tr>
+          <tr class="group-break"><td colspan="9"></td></tr>
+          <tr><td>SchNet (3D)</td><td>none</td><td>frozen</td><td>0.3465</td><td>0.4502</td><td>0.3399</td><td>0.5821</td><td>0.6130</td><td>0.3028</td></tr>
+          <tr><td>SchNet (3D)</td><td>0.3M</td><td>frozen</td><td>0.3493</td><td>0.4406</td><td>0.3522</td><td>0.5512</td><td>0.6079</td><td>0.3111</td></tr>
+          <tr><td>SchNet (3D)</td><td>30M</td><td>frozen</td><td>0.3257</td><td>0.5130</td><td>0.3004</td><td>0.6773</td><td>0.5723</td><td>0.3793</td></tr>
+          <tr><td>SchNet (3D)</td><td>0.3M</td><td>full</td><td>0.3137</td><td>0.5511</td><td>0.2609</td><td>0.7353</td><td>0.5335</td><td>0.4441</td></tr>
+          <tr><td>SchNet (3D)</td><td>30M</td><td>full</td><td>0.3002</td><td>0.5605</td><td>0.2544</td><td>0.7395</td><td>0.5154</td><td>0.4625</td></tr>
+          <tr class="group-break"><td colspan="9"></td></tr>
+          <tr><td>EquiformerV2-XL (3D)</td><td>none</td><td>frozen</td><td>0.3491</td><td>0.4556</td><td>0.3304</td><td>0.6019</td><td>0.5821</td><td>0.3824</td></tr>
+          <tr><td>EquiformerV2-XL (3D)</td><td>0.3M</td><td>frozen</td><td>0.3139</td><td>0.5482</td><td>0.2798</td><td>0.7110</td><td>0.5553</td><td>0.4223</td></tr>
+          <tr><td>EquiformerV2-XL (3D)</td><td>30M</td><td>frozen</td><td>0.2977</td><td>0.5776</td><td>0.2573</td><td>0.7516</td><td>0.5188</td><td>0.4842</td></tr>
+          <tr><td>EquiformerV2-XL (3D)</td><td>0.3M</td><td>full</td><td><u>0.2966</u></td><td>0.5424</td><td>0.2471</td><td><u>0.7821</u></td><td><u>0.5002</u></td><td>0.4592</td></tr>
+          <tr><td>EquiformerV2-XL (3D)</td><td>30M</td><td>full</td><td><b>0.2689</b></td><td><b>0.6185</b></td><td><b>0.2249</b></td><td><b>0.8019</b></td><td><b>0.4693</b></td><td><b>0.5052</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="content is-small has-text-justified">
+      <p>
+        Test MAE (eV, lower is better) and R² (higher is better) on the fixed 2,515-molecule scaffold-disjoint test split
+        at the full 20,113-label budget. <em>Pretrain</em> counts unique dataset molecules seen during modality-appropriate
+        pretraining, <em>none</em> being a randomly initialized encoder; <em>Adapt</em> is a frozen encoder with a trained
+        MLP head or end-to-end fine-tuning. <strong>Bold</strong> is the best value per column, <u>underline</u> the second
+        best. Each row of this work uses one downstream seed. The baseline (MPNN + descriptors, Bhat et al. 2023) was
+        evaluated by its authors under 5-fold random cross-validation rather than on this scaffold-disjoint split, so it is
+        a reference point rather than a paired comparison.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+ <div class="container">
+  <div class="columns is-centered">
+   <div class="column is-8 has-text-centered">
+     <p>This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>, adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page. Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution‑ShareAlike 4.0 International License</a>.</p>
+   </div>
+  </div>
+ </div>
+</footer>
+</body>
+</html>
